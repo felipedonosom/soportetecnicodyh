@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Promo Certificación OTDR — Soporte Técnico Donoso e Hijos</title>
+  <link rel="stylesheet" href="../styles.css">
+  <meta name="description" content="Certificación OTDR con reporte PDF y recomendaciones técnicas. Oferta en la RM.">
+  <link rel="canonical" href="https://tudominio.cl/promo-certificacion/">
+  <style>
+    .hero-promo{background: radial-gradient(1200px 600px at 10% 10%, #0b1224, #0f172a); color:#fff; padding:40px 0}
+    .hero-promo h1{font-size:clamp(28px,5vw,44px)}
+    .promo-wrap{display:grid;grid-template-columns:1.1fr .9fr; gap:24px; align-items:start}
+    .promo-bullet{list-style:none; padding-left:0}
+    .promo-bullet li{margin:6px 0}
+    .promo-price{font-size:28px; font-weight:800; margin-top:8px}
+    .promo-badge{display:inline-block; background:#16a34a; color:#fff; padding:4px 8px; border-radius:8px; font-size:14px}
+    .lead-form input,.lead-form textarea{width:100%; padding:10px 12px; border-radius:10px; border:1px solid #cbd5e1; margin-bottom:10px}
+    .lead-form .btn{width:100%}
+    .trust{display:flex; gap:16px; flex-wrap:wrap; margin-top:12px}
+    .trust span{background:#f1f5f9; border:1px solid #e5e7eb; padding:8px 10px; border-radius:10px; font-size:14px}
+    @media(max-width:840px){.promo-wrap{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero-promo">
+      <div class="container promo-wrap">
+        <div>
+          <h1>Promo Certificación OTDR</h1>
+          <p>Certificación profesional con reporte PDF y recomendaciones.</p>
+          <ul class="promo-bullet">
+            <li>✔ Medición con OTDR y power meter</li>
+            <li>✔ Informe PDF con trazas</li>
+            <li>✔ Recomendaciones técnicas</li>
+          </ul>
+          <p class="promo-price">Desde <strong>$80.000</strong> <span class="promo-badge">Oferta limitada</span></p>
+          <div class="trust">
+            <span>🧪 Trazas incluidas</span><span>⚡ Agenda flexible</span><span>🧰 Informe para auditoría</span>
+          </div>
+        </div>
+        <div>
+          <form id="lead-cert" class="card lead-form" method="POST" action="https://formspree.io/f/xxxxx">
+            <input type="hidden" name="_subject" value="Lead Promo Certificación — Donoso e Hijos"/>
+            <!-- UTM capture -->
+            <input type="hidden" id="utm_source" name="utm_source">
+            <input type="hidden" id="utm_medium" name="utm_medium">
+            <input type="hidden" id="utm_campaign" name="utm_campaign">
+            <input type="hidden" id="utm_content" name="utm_content">
+            <input type="hidden" id="utm_term" name="utm_term">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required/>
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" name="telefono" type="tel" placeholder="+56 9 ..." required/>
+            <label for="correo">Correo</label>
+            <input id="correo" name="correo" type="email" placeholder="tucorreo@ejemplo.cl" required/>
+            <label for="comuna">Comuna</label>
+            <input id="comuna" name="comuna" type="text" placeholder="Ej.: Las Condes" required/>
+            <label for="mensaje">Descripción breve</label>
+            <textarea id="mensaje" name="mensaje" rows="4" placeholder="¿Cuántos enlaces? ¿Tipo de fibra?" required></textarea>
+            <label class="checkline"><input type="checkbox" id="acepto" required/> Acepto ser contactado</label>
+            <button class="btn primary" type="submit">Quiero la certificación</button>
+            <button class="btn" type="button" id="wsp-btn-cert">Enviar por WhatsApp</button>
+            <p id="lead-msg" role="status" aria-live="polite"></p>
+          </form>
+          <p style="margin-top:8px;text-align:center"><a href="../index.html" class="btn">← Volver al sitio</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // UTM capture
+    (function(){
+      const params = new URLSearchParams(location.search);
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{
+        const v = params.get(k);
+        const el = document.getElementById(k);
+        if(v && el) el.value = v;
+      });
+    })();
+
+    // Form AJAX + conversion + local lead store
+    (function(){
+      const form = document.getElementById('lead-cert');
+      const msg = document.getElementById('lead-msg');
+      if(!form) return;
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        msg.textContent='Enviando…';
+        try {
+          const data = new FormData(form);
+          const payload = Object.fromEntries(data.entries());
+          const resp = await fetch(form.action, { method:'POST', body:data, headers:{'Accept':'application/json'}});
+          if(resp.ok){
+            // store mini lead locally
+            try {
+              const key='donoso_leads';
+              const arr = JSON.parse(localStorage.getItem(key)||'[]');
+              arr.push({fecha:new Date().toISOString(), origen:'promo-certificacion', ...payload});
+              localStorage.setItem(key, JSON.stringify(arr));
+            }catch(_){}
+            // conversion markers
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({event:'lead_enviado', formulario:'promo-certificacion'});
+            if(window.fbq){ fbq('track', 'Lead', {content_name:'Promo Certificación'}); }
+            // redirect
+            sendWhatsAppPrefill({nombre:document.getElementById('nombre').value,telefono:document.getElementById('telefono').value,correo:document.getElementById('correo').value,comuna:document.getElementById('comuna').value,mensaje:document.getElementById('mensaje').value});
+            location.href = './gracias.html';
+          }else{
+            msg.textContent='No se pudo enviar. Intenta de nuevo o WhatsApp.';
+          }
+        } catch(err){
+          msg.textContent='Error de red. Por favor, intenta de nuevo.';
+        }
+      }, { once:true });
+    })();
+  </script>
+
+  <div class="mobile-cta" role="region" aria-label="Acciones rápidas">
+    <a href="tel:+56962822440" class="btn" aria-label="Llamar ahora">Llamar</a>
+    <a href="https://wa.me/56962822440" target="_blank" rel="noopener" class="btn primary" aria-label="Abrir WhatsApp">WhatsApp</a>
+  </div>
+</body>
+</html>
+

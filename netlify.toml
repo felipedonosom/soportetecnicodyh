@@ -1,0 +1,26 @@
+# Netlify config: redirects + security headers
+[[redirects]]
+  from = "http://*"
+  to = "https://:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog"
+  to = "/blog/"
+  status = 301
+
+# Optional: pretty URLs if needed
+#[[redirects]]
+#  from = "/*/index.html"
+#  to = "/:splat/"
+#  status = 200
+
+# Security headers (basic)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=()"

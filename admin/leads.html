@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leads — Admin local</title>
+  <link rel="stylesheet" href="../styles.css">
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    .admin-wrap{max-width:1100px;margin:20px auto;padding:0 16px}
+    .admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+    table{width:100%;border-collapse:collapse}
+    th,td{border:1px solid #e5e7eb;padding:8px 10px;text-align:left}
+    thead th{background:#f8fafc}
+    .note{color:#475569;font-size:14px}
+  </style>
+</head>
+<body>
+  <main class="admin-wrap">
+    <h1>Leads guardados en este navegador</h1>
+    <p class="note">Solo muestra los leads capturados desde este dispositivo y navegador (localStorage). Para reportes completos, usa las exportaciones de Formspree/Netlify.</p>
+    <div class="admin-actions">
+      <button id="download" class="btn">Descargar CSV</button>
+      <button id="clear" class="btn">Borrar almacen local</button>
+      <a href="../index.html" class="btn">← Volver al sitio</a>
+    </div>
+    <div class="table-wrap">
+      <table id="tbl">
+        <thead>
+          <tr><th>Fecha</th><th>Origen</th><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Comuna</th><th>Mensaje</th><th>utm_source</th><th>utm_medium</th><th>utm_campaign</th><th>utm_content</th><th>utm_term</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+  <script>
+    const key='donoso_leads';
+    function getLeads(){
+      try { return JSON.parse(localStorage.getItem(key)||'[]'); } catch(_){ return []; }
+    }
+    function render(){
+      const tbody=document.querySelector('#tbl tbody');
+      tbody.innerHTML='';
+      getLeads().forEach(l=>{
+        const tr=document.createElement('tr');
+        ['fecha','origen','nombre','telefono','correo','comuna','mensaje','utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{
+          const td=document.createElement('td'); td.textContent=l[k]||''; tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+    function toCSV(arr){
+      const cols=['fecha','origen','nombre','telefono','correo','comuna','mensaje','utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+      const escape = s => ('"'+String(s).replace(/"/g,'""')+'"');
+      const rows = [cols.map(escape).join(',')].concat(arr.map(o=>cols.map(c=>escape(o[c]||'')).join(',')));
+      return rows.join('\n');
+    }
+    document.getElementById('download').onclick=()=>{
+      const csv = toCSV(getLeads());
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'leads_locales.csv'; a.click();
+      URL.revokeObjectURL(url);
+    };
+    document.getElementById('clear').onclick=()=>{ localStorage.removeItem(key); render(); };
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Promo Empalme por Fusión — Soporte Técnico Donoso e Hijos</title>
+  <link rel="stylesheet" href="../styles.css">
+  <meta name="description" content="Empalme por fusión de fibra óptica con certificación. Oferta por tiempo limitado en la RM.">
+  <link rel="canonical" href="https://tudominio.cl/promo-empalme/">
+  <!-- <meta name="robots" content="noindex, nofollow">  Descomenta si NO quieres indexar la landing -->
+  <style>
+    .hero-promo{background: radial-gradient(1200px 600px at 10% 10%, #0b1224, #0f172a); color:#fff; padding:40px 0}
+    .hero-promo h1{font-size:clamp(28px,5vw,44px)}
+    .promo-wrap{display:grid;grid-template-columns:1.1fr .9fr; gap:24px; align-items:start}
+    .promo-bullet{list-style:none; padding-left:0}
+    .promo-bullet li{margin:6px 0}
+    .promo-price{font-size:28px; font-weight:800; margin-top:8px}
+    .promo-badge{display:inline-block; background:#16a34a; color:#fff; padding:4px 8px; border-radius:8px; font-size:14px}
+    .lead-form input,.lead-form textarea{width:100%; padding:10px 12px; border-radius:10px; border:1px solid #cbd5e1; margin-bottom:10px}
+    .lead-form .btn{width:100%}
+    .trust{display:flex; gap:16px; flex-wrap:wrap; margin-top:12px}
+    .trust span{background:#f1f5f9; border:1px solid #e5e7eb; padding:8px 10px; border-radius:10px; font-size:14px}
+    .timer{font-variant-numeric:tabular-nums; font-weight:700}
+    @media(max-width:840px){.promo-wrap{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero-promo">
+      <div class="container promo-wrap">
+        <div>
+          <h1>Promo Empalme por Fusión</h1>
+          <p>Servicio profesional con certificación. Atención en la Región Metropolitana.</p>
+          <ul class="promo-bullet">
+            <li>✔ Empalme con protección termo y orden en bandeja/ODF</li>
+            <li>✔ Prueba de continuidad y recomendaciones</li>
+            <li>✔ Informe básico de respaldo</li>
+          </ul>
+          <p class="promo-price">Desde <strong>$15.000</strong> por empalme <span class="promo-badge">Oferta limitada</span></p>
+          <div class="trust">
+            <span>🧪 Certificación</span><span>⚡ Respuesta rápida</span><span>🧰 Garantía</span>
+          </div>
+          <p style="margin-top:10px">Termina en: <span id="countdown" class="timer">—</span></p>
+        </div>
+        <div>
+          <form id="lead" class="card lead-form" method="POST" action="https://formspree.io/f/xxxxx">
+            <input type="hidden" name="_subject" value="Lead Promo Empalme — Donoso e Hijos"/>
+            <!-- UTM capture -->
+            <input type="hidden" id="utm_source" name="utm_source">
+            <input type="hidden" id="utm_medium" name="utm_medium">
+            <input type="hidden" id="utm_campaign" name="utm_campaign">
+            <input type="hidden" id="utm_content" name="utm_content">
+            <input type="hidden" id="utm_term" name="utm_term">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required/>
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" name="telefono" type="tel" placeholder="+56 9 ..." required/>
+            <label for="correo">Correo</label>
+            <input id="correo" name="correo" type="email" placeholder="tucorreo@ejemplo.cl" required/>
+            <label for="comuna">Comuna</label>
+            <input id="comuna" name="comuna" type="text" placeholder="Ej.: Ñuñoa" required/>
+            <label for="mensaje">Descripción breve</label>
+            <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos qué necesitas" required></textarea>
+            <label class="checkline"><input type="checkbox" id="acepto" required/> Acepto ser contactado</label>
+            <button class="btn primary" type="submit">Quiero la promo</button>
+            <button class="btn" type="button" id="wsp-btn-empalme">Enviar por WhatsApp</button>
+            <p id="lead-msg" role="status" aria-live="polite"></p>
+          </form>
+          <p style="margin-top:8px;text-align:center"><a href="../index.html" class="btn">← Volver al sitio</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>¿Qué incluye?</h2>
+        <div class="cards">
+          <article class="card"><h3>Empalme por fusión</h3><p>Equipo calibrado, limpieza y protección termo.</p></article>
+          <article class="card"><h3>Pruebas y certificación</h3><p>Continuidad, pérdidas y registro fotográfico.</p></article>
+          <article class="card"><h3>Garantía</h3><p>Garantía de 90 días sobre el trabajo realizado.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Countdown simple (3 días desde primera visita)
+    (function(){
+      const key='promo_deadline';
+      const existing=localStorage.getItem(key);
+      let deadline = existing ? new Date(existing) : new Date(Date.now()+3*24*60*60*1000);
+      if(!existing) localStorage.setItem(key, deadline.toISOString());
+      function pad(n){return String(n).padStart(2,'0')}
+      function tick(){
+        const el=document.getElementById('countdown');
+        const diff = Math.max(0, deadline - new Date());
+        const d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000), m=Math.floor(diff%3600000/60000);
+        el.textContent = d+'d '+pad(h)+'h '+pad(m)+'m';
+      }
+      setInterval(tick, 30000); tick();
+    })();
+
+    // UTM capture
+    (function(){
+      const params = new URLSearchParams(location.search);
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{
+        const v = params.get(k);
+        const el = document.getElementById(k);
+        if(v && el) el.value = v;
+      });
+    })();
+
+    // Form AJAX + conversion event + redirect
+    (function(){
+      const form = document.getElementById('lead');
+      const msg = document.getElementById('lead-msg');
+      if(!form) return;
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        msg.textContent='Enviando…';
+        try {
+          const data = new FormData(form);
+          const resp = await fetch(form.action, { method:'POST', body:data, headers:{'Accept':'application/json'}});
+          if(resp.ok){
+            // Conversion events
+            window.dataLayer = window.dataLayer || [];
+            try {
+              const key='donoso_leads';
+              const arr = JSON.parse(localStorage.getItem(key)||'[]');
+              arr.push({fecha:new Date().toISOString(), origen:'promo-empalme', nombre:document.getElementById('nombre').value, telefono:document.getElementById('telefono').value, correo:document.getElementById('correo').value, comuna:document.getElementById('comuna').value, mensaje:document.getElementById('mensaje').value, utm_source:document.getElementById('utm_source').value, utm_medium:document.getElementById('utm_medium').value, utm_campaign:document.getElementById('utm_campaign').value, utm_content:document.getElementById('utm_content').value, utm_term:document.getElementById('utm_term').value});
+              localStorage.setItem(key, JSON.stringify(arr));
+            }catch(_){}
+            window.dataLayer.push({event:'lead_enviado', formulario:'promo-empalme'});
+            if(window.fbq){ fbq('track', 'Lead', {content_name:'Promo Empalme'}); }
+            // Redirect to thank-you
+            sendWhatsAppPrefill({nombre:document.getElementById('nombre').value,telefono:document.getElementById('telefono').value,correo:document.getElementById('correo').value,comuna:document.getElementById('comuna').value,mensaje:document.getElementById('mensaje').value});
+            location.href = './gracias.html';
+          }else{
+            msg.textContent='No se pudo enviar. Intenta otra vez o contáctanos por WhatsApp.';
+          }
+        } catch(err){
+          msg.textContent='Error de red. Por favor, intenta de nuevo.';
+        }
+      }, { once:true });
+    })();
+  </script>
+
+  <div class="mobile-cta" role="region" aria-label="Acciones rápidas">
+    <a href="tel:+56962822440" class="btn" aria-label="Llamar ahora">Llamar</a>
+    <a href="https://wa.me/56962822440" target="_blank" rel="noopener" class="btn primary" aria-label="Abrir WhatsApp">WhatsApp</a>
+  </div>
+</body>
+</html>
+
